@@ -19,17 +19,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 严格过滤非数字，并用你给的真 Offer ID (297170) 和 Aff ID (4033) 稳固兜底
     const safeOfferId = (offer_id || '').replace(/\D/g, '') || '297170'; 
     const safeAffId = (aff_id || '').replace(/\D/g, '') || '4033';
-    
-    // 💥 锁死真 Token：优先用传参的，没传就用你的真 Token 51bd5411badf480c8c1e3a5b8d3d653b
     const safeToken = token || '51bd5411badf480c8c1e3a5b8d3d653b';
 
-    // 🔥 彻底替换为真实的接口域名：m.bolo2vas102.click
     const cpTargetUrl = `https://m.bolo2vas102.click/c/pin/${safeOfferId}/${safeAffId}?msisdn=${msisdn}&cid=${click_id || ''}&token=${safeToken}`;
     
-    console.log(`[PIN REQUEST] 📡 正在向 CP 真实接口发起 GET 请求 -> ${cpTargetUrl}`);
+    console.log(`[PIN REQUEST] 📡 正在向 CP 发起 GET 请求 -> ${cpTargetUrl}`);
 
     const cpResponse = await fetch(cpTargetUrl, { method: 'GET' });
     const cpResult = await cpResponse.json();
@@ -38,15 +34,25 @@ export default async function handler(req, res) {
 
     if (cpResult && cpResult.stateCode === 0) {
       const txid = cpResult.txid;
-      console.log(`[PIN REQUEST] ✅ 发码成功！txid: ${txid}`);
+      console.log(`[PIN REQUEST] ✅ CP发码大成功！准备开始插入 Supabase...`);
 
-      await supabase.from('conversions').insert([{
+      // 💥 重点：我们在这里用 data, error 极其精准地捕获这次写入的所有动静
+      const { data: dbData, error: dbError } = await supabase.from('conversions').insert([{
         msisdn: msisdn,
         click_id: click_id || null,
         txid: txid,
         status: 'pending',
         cp_response: JSON.stringify(cpResult)
-      }]);
+      }]).select(); // 加 .select() 可以强行让数据库返回插入成功的快照数据
+
+      // 💥 终极显性检测打印：
+      if (dbError) {
+        // 如果数据库拒收，它必须在 Vercel 打印出具体的死因！
+        console.error(`[🚨 DATABASE ERROR] ❌ Supabase 明确拒绝写入！死因详情 ->`, JSON.stringify(dbError));
+      } else {
+        // 如果写入成功，打印成功回执
+        console.log(`[🎉 DATABASE SUCCESS]  数据已成功写入 Supabase，回执快照 ->`, JSON.stringify(dbData));
+      }
 
       return res.status(200).json({ stateCode: 0, txid: txid, msg: null });
     } else {
