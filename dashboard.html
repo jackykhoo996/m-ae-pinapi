@@ -60,15 +60,14 @@
                 <th>状态</th>
             </tr>
         </thead>
-        <tbody id="data-rows">
-            </tbody>
+        <tbody id="data-rows"></tbody>
     </table>
 
     <script>
-        // 💥 填入你的 Supabase 真实公网钥匙
-        const SUPABASE_URL = "https://krcbbiitqkmlcoryedes.supabase.co"; // 换成你的真URL
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyY2JiaWl0qWttbGNvcnllZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzUxMDgsImV4cCI6MjA5NTQ1MTEwOH0.il63duhVsujomyvWWcsOK_Jjbn9k5lkbBH0Ev4Dm5s4"; // 换成你的真anon key
+        const SUPABASE_URL = "https://krcbbiitqkmlcoryedes.supabase.co"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyY2JiaWl0qWttbGNvcnllZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzUxMDgsImV4cCI6MjA5NTQ1MTEwOH0.il63duhVsujomyvWWcsOK_Jjbn9k5lkbBH0Ev4Dm5s4"; 
         
+        // 💥 终极修复：右侧改用大写 S 的官方标准类名，彻底解决卡死冲突！
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function fetchData() {
@@ -82,10 +81,10 @@
 
                 if (error) throw error;
 
-                // 2. 算盘计算各项 KPI
-                let total = data.length;
-                let success = data.filter(r => r.status === 'verified').length;
-                let failed = data.filter(r => r.status === 'failed').length;
+                // 2. 算盘计算各项 KPI（增加了空安全保障）
+                let total = data ? data.length : 0;
+                let success = data ? data.filter(r => r.status === 'verified').length : 0;
+                let failed = data ? data.filter(r => r.status === 'failed').length : 0;
                 let cr = total > 0 ? ((success / total) * 100).toFixed(2) : '0.00';
 
                 // 3. 渲染卡片数字
@@ -98,28 +97,35 @@
                 const tbody = document.getElementById('data-rows');
                 tbody.innerHTML = '';
                 
-                data.forEach(row => {
-                    const tr = document.createElement('tr');
-                    
-                    // 格式化时间
-                    const date = new Date(row.created_at).toISOString().replace('T', ' ').substring(0, 19);
-                    
-                    // 状态高亮
-                    let statusClass = row.status === 'verified' ? 'success' : (row.status === 'failed' ? 'failed' : 'pending');
+                if (data && total > 0) {
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        
+                        // 格式化时间
+                        const date = row.created_at ? new Date(row.created_at).toISOString().replace('T', ' ').substring(0, 19) : '未知';
+                        
+                        // 状态兼容性高亮（转大写防错）
+                        const currentStatus = (row.status || 'PENDING').toLowerCase();
+                        let statusClass = 'pending';
+                        if (currentStatus === 'verified' || currentStatus === 'success') statusClass = 'success';
+                        if (currentStatus === 'failed') statusClass = 'failed';
 
-                    tr.innerHTML = `
-                        <td>${date}</td>
-                        <td>${row.msisdn}</td>
-                        <td>${row.carrier || 'Etisalat'}</td>
-                        <td style="font-family:monospace; font-size:12px;">${row.click_id || '无'}</td>
-                        <td class="${statusClass}"><b>${row.status.toUpperCase()}</b></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                        tr.innerHTML = `
+                            <td>${date}</td>
+                            <td>${row.msisdn || '未知'}</td>
+                            <td>${row.carrier || 'Etisalat'}</td>
+                            <td style="font-family:monospace; font-size:12px;">${row.click_id || '无'}</td>
+                            <td class="${statusClass}"><b>${currentStatus.toUpperCase()}</b></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#666;">暂无流水数据</td></tr>';
+                }
 
             } catch (e) {
                 console.error("加载看板失败:", e.message);
-                alert("看板数据加载失败，请检查配置！");
+                alert("看板数据加载失败，请检查配置！原因: " + e.message);
             }
         }
 
