@@ -1,93 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UAE MVAS - Real-time Performance Dashboard</title>
+    <title>阿联酋 MVAS 实时买量转化看板</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 24px; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #21262d; padding-bottom: 16px; }
-        .header h2 { font-size: 20px; font-weight: 600; color: #f0f6fc; display: flex; align-items: center; gap: 10px; }
-        .refresh-btn { background-color: #238636; color: #ffffff; border: 1px solid rgba(240,246,252,0.1); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
-        .refresh-btn:hover { background-color: #2ea44f; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
-        .stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 24px; text-align: center; }
-        .stat-card h3 { margin: 0; color: #8b949e; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card p { margin: 12px 0 0 0; font-size: 32px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace; }
-        .success { color: #3fb950; }
-        .failed { color: #f85149; }
-        .pending { color: #d29922; }
-        h3.table-title { margin-top: 36px; font-size: 16px; font-weight: 600; color: #f0f6fc; }
-        .table-container { width: 100%; overflow-x: auto; border: 1px solid #30363d; border-radius: 6px; margin-top: 12px; background: #161b22; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        th, td { padding: 12px 16px; border-bottom: 1px solid #21262d; }
-        th { background-color: #161b22; color: #8b949e; font-weight: 600; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #1f242c; }
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .badge-success { background: rgba(63,185,80,0.15); color: #3fb950; }
-        .badge-failed { background: rgba(248,81,73,0.15); color: #f85149; }
-        .badge-pending { background: rgba(210,153,34,0.15); color: #d29922; }
+        body { background-color: #121212; color: #e0e0e0; font-family: -apple-system, sans-serif; margin: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .refresh-btn { background-color: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .refresh-btn:hover { background-color: #059669; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .stat-card { background: #1e1e1e; border: 1px solid #2d2d2d; border-radius: 8px; padding: 20px; text-align: center; }
+        .stat-card h3 { margin: 0; color: #888; font-size: 14px; text-transform: uppercase; }
+        .stat-card p { margin: 10px 0 0 0; font-size: 32px; font-weight: bold; }
+        .success { color: #10b981; }
+        .failed { color: #ef4444; }
+        .pending { color: #f59e0b; }
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; background: #1e1e1e; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #2d2d2d; font-size: 14px; }
+        th { background-color: #2a2a2a; color: #aaa; }
+        tr:hover { background-color: #252525; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>🇦🇪 Etisalat UAE - Live Conversion Funnel</h2>
-        <button class="refresh-btn" onclick="fetchData()">🔄 Refresh Data</button>
+        <h2>🇦🇪 Etisalat 实时数据大盘</h2>
+        <button class="refresh-btn" onclick="fetchData()">🔄 刷新数据</button>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <h3>Total Hits (PIN Req)</h3>
+            <h3>总发码请求 (Hits)</h3>
             <p id="total-hits">0</p>
         </div>
         <div class="stat-card">
-            <h3>Verified Conv.</h3>
+            <h3>成功订阅 (Verified)</h3>
             <p id="total-success" class="success">0</p>
         </div>
         <div class="stat-card">
-            <h3>Failed Attempt</h3>
+            <h3>验证失败 (Failed)</h3>
             <p id="total-failed" class="failed">0</p>
         </div>
         <div class="stat-card">
-            <h3>Conversion Rate (CR)</h3>
+            <h3>综合转化率 (CR)</h3>
             <p id="cr-rate">0.00%</p>
         </div>
     </div>
 
-    <h3 class="table-title">📋 Real-time Conversion Logs (Latest 50 Hits)</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Timestamp (GMT)</th>
-                    <th>Cleaned MSISDN</th>
-                    <th>Carrier</th>
-                    <th>Voluum ClickID</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="data-rows">
-                <tr>
-                    <td colspan="5" style="text-align:center; color:#8b949e; padding: 24px;">Initializing connection to Supabase...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <h3>📋 实时转化流水（最新50笔）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>时间 (GMT)</th>
+                <th>手机号</th>
+                <th>运营商</th>
+                <th>Voluum ClickID</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody id="data-rows"></tbody>
+    </table>
 
     <script>
-        // 💥 Verified Match: Paired with your real UAE project ID (qocrghvrnbppvyeukyyr)
         const SUPABASE_URL = "https://qocrghvrnbppvyeukyyr.supabase.co"; 
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvY3JnaHZybmJwcHZ5ZXVreXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3打O3M2Y2NzYsImV4cCI6MjA5NTk0NDY3Nn0.tXDe27x41dcHDm5JAFJxR1_q04PK9RovI5UjaBS2Dpw"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvY3JnaHZybmJwcHZ5ZXVreXlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNjg2NzYsImV4cCI6MjA5NTk0NDY3Nn0.tXDe27x41dcHDm5JAFJxR1_q04PK9RovI5UjaBS2Dpw"; 
         
-        // Anti-collision declaration
+        // 💥 黄金修复：把变量名改成纯净的 dbClient，彻底拉开冲突，右侧严格大写 S
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function fetchData() {
             try {
-                // 1. Fetch records from conversions table
+                // 1. 使用改名后的 dbClient 客户端稳稳向云端查表
                 const { data, error } = await dbClient
                     .from('conversions')
                     .select('*')
@@ -96,62 +81,52 @@
 
                 if (error) throw error;
 
-                // 2. Data calculation
+                // 2. 算盘计算各项 KPI
                 let total = data ? data.length : 0;
                 let success = data ? data.filter(r => r.status === 'verified' || r.status === 'success').length : 0;
                 let failed = data ? data.filter(r => r.status === 'failed').length : 0;
                 let cr = total > 0 ? ((success / total) * 100).toFixed(2) : '0.00';
 
-                // 3. Render Metric Cards
+                // 3. 渲染卡片数字
                 document.getElementById('total-hits').innerText = total;
                 document.getElementById('total-success').innerText = success;
                 document.getElementById('total-failed').innerText = failed;
                 document.getElementById('cr-rate').innerText = cr + '%';
 
-                // 4. Render Log Data Rows
+                // 4. 渲染表格明细
                 const tbody = document.getElementById('data-rows');
                 tbody.innerHTML = '';
                 
                 if (data && total > 0) {
                     data.forEach(row => {
                         const tr = document.createElement('tr');
-                        
-                        // Time formatting
-                        const date = row.created_at ? new Date(row.created_at).toISOString().replace('T', ' ').substring(0, 19) : 'N/A';
-                        
-                        // High-standard Status Badges
+                        const date = row.created_at ? new Date(row.created_at).toISOString().replace('T', ' ').substring(0, 19) : '未知';
                         const currentStatus = (row.status || 'PENDING').toLowerCase();
-                        let statusClass = 'badge-pending';
-                        let statusText = 'PENDING';
                         
-                        if (currentStatus === 'verified' || currentStatus === 'success') {
-                            statusClass = 'badge-success';
-                            statusText = 'VERIFIED';
-                        } else if (currentStatus === 'failed') {
-                            statusClass = 'badge-failed';
-                            statusText = 'FAILED';
-                        }
+                        let statusClass = 'pending';
+                        if (currentStatus === 'verified' || currentStatus === 'success') statusClass = 'success';
+                        if (currentStatus === 'failed') statusClass = 'failed';
 
                         tr.innerHTML = `
-                            <td style="font-family: monospace; color: #8b949e;">${date}</td>
-                            <td style="font-weight: 600; color: #c9d1d9;">${row.msisdn || 'Unknown'}</td>
-                            <td><span style="color: #58a6ff;">●</span> ${row.carrier || 'Etisalat'}</td>
-                            <td style="font-family: monospace; font-size: 12px; color: #8b949e;">${row.click_id || 'direct_traffic'}</td>
-                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td>${date}</td>
+                            <td>${row.msisdn || '未知'}</td>
+                            <td>${row.carrier || 'Etisalat'}</td>
+                            <td style="font-family:monospace; font-size:12px;">${row.click_id || '无'}</td>
+                            <td class="${statusClass}"><b>${currentStatus.toUpperCase()}</b></td>
                         `;
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#8b949e; padding: 24px;">No traffic records found in conversions table.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#666;">暂无流水数据</td></tr>';
                 }
 
             } catch (e) {
-                console.error("Dashboard core error:", e.message);
-                alert("Data load aborted: " + e.message);
+                console.error("加载看板失败:", e.message);
+                alert("看板数据加载失败，原因: " + e.message);
             }
         }
 
-        // Auto initialization
+        // 页面加载自动跑一次
         window.onload = fetchData;
     </script>
 </body>
