@@ -3,236 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>العرض الخاص من اتصالات</title>
-  <meta name="meta description" content="العرض الخاص من اتصالات الإمارات - اشترك الآن واستمتع بأفضل الخدمات.">
+  <title>ببجي موبايل - حدث المكافآت الرسمي في الإمارات</title>
+  
   <style>
-    /* ── 工业级重置：彻底根除手机端多余的晃动、滚动条和白边 ── */
+    /* ── 工业级重置：彻底根除晃动 ── */
     *, *::before, *::after { 
       box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
+      margin: 0; padding: 0; 
       -webkit-tap-highlight-color: transparent;
     }
     
     html, body {
-      width: 100%;
-      height: 100%;
-      background: #f4f7f5;
-      color: #222;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow-x: hidden;
+      width: 100%; height: 100%;
+      background: #020511; color: #e1e7f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+    
+    /* ── 核心魔术：带游戏背景的全局滚动壳 ── */
+    .scroll-wrapper {
+      width: 100%; height: 100%;
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      display: flex; flex-direction: column; align-items: center;
+      
+      /* 🚀 高级买量手段：先用暗黑雷电渐变打底（防止白屏），然后异步加载绝地海岛高清战场背景图 */
+      background: linear-gradient(180deg, rgba(8,18,41,0.85) 0%, rgba(2,4,10,0.95) 100%), 
+                  url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop') no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* ── 黄金核心：全机型绝对垂直居中大盒子 ── */
+    .main-hero-screen {
+      width: 100%; min-height: 100vh; max-width: 440px;
+      padding: 24px 16px;
+      display: flex; flex-direction: column;
+      justify-content: center; /* ⚡ 强行垂直居中，捕获黄金单手大拇指操作区 */
+      align-items: center;
       position: relative;
     }
     
-    /* ── 全局外层滚动包壳（确保划下去能看全资费） ── */
-    .scroll-wrapper {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
+    .hero-content-inner { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-    /* ── 黄金定位核心大盒子（全机型绝不跑偏） ── */
-    .main-hero-screen {
-      width: 100%;
-      min-height: 100vh;
-      max-width: 440px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 24px;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .hero-content-inner {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* ── 落地页文案视觉 ── */
-    .main-title-ar {
-      font-size: 25px;
-      font-weight: 800;
-      color: #007a3d;
-      line-height: 1.4;
-      margin-bottom: 24px; /* 💥 增加了底部间距，弥补删除文案后的空白，视觉更透气 */
-      text-align: center;
-    }
-
-    .guide-text {
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-    
-    /* ── 表单卡片 ── */
-    .form-card { 
-      width: 100%; 
-      padding: 24px; 
-      border-radius: 20px; 
-      background: #fcfdfe; 
-      border: 1px solid #e2e9e5;
-      box-shadow: 0 8px 20px rgba(0, 122, 61, 0.02);
-      margin-bottom: 15px;
-    }
-    
-    .form-lbl { 
-      display: block; 
-      font-size: 13px; 
-      font-weight: 700; 
-      margin-bottom: 12px; 
-      color: #333;
-      text-align: right;
-    }
-    
-    /* ── 完美对齐的右侧国家代码输入框 ── */
-    .phone-input-group {
-      display: flex;
-      direction: rtl;
-      border: 2px solid #ccd5d0;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #ffffff;
-      transition: border-color 0.2s;
+    /* ── 官方信赖感背书 ── */
+    .official-badge {
+      background: rgba(0, 186, 242, 0.15);
+      border: 1px solid rgba(0, 186, 242, 0.5);
+      color: #00baf2; font-size: 12px; font-weight: 800;
+      padding: 6px 14px; border-radius: 20px;
       margin-bottom: 20px;
-      width: 100%;
+      display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 0 15px rgba(0, 186, 242, 0.2);
+    }
+
+    .main-title-ar {
+      font-size: 26px; font-weight: 900; color: #ffffff;
+      line-height: 1.4; text-align: center;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9); margin-bottom: 20px;
+    }
+
+    /* ── 豪华 3D 霓虹全息奖品展示台 ── */
+    .reward-display-card {
+      width: 100%; background: rgba(6, 12, 31, 0.9);
+      border: 1px solid #00baf2; border-radius: 12px;
+      padding: 16px; margin-bottom: 16px;
+      display: flex; justify-content: space-around; align-items: center;
+      box-shadow: 0 0 25px rgba(0, 186, 242, 0.35);
+    }
+    .reward-item { text-align: center; }
+    .reward-icon { font-size: 38px; margin-bottom: 6px; filter: drop-shadow(0 0 8px #00baf2); }
+    .reward-name { font-size: 13px; color: #00baf2; font-weight: 800; }
+
+    /* ⏳ 紧迫感诱导：动态倒计时 */
+    .countdown-bar {
+      font-size: 12px; font-weight: 700; color: #ffffff; margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.7); padding: 5px 16px; border-radius: 30px;
+      border: 1px solid rgba(255, 153, 0, 0.3);
+    }
+    .countdown-bar span { color: #ff9900; font-family: monospace; font-size: 14px; }
+
+    /* ── 表单核心卡片（吸金重灾区） ── */
+    .form-card { 
+      width: 100%; padding: 24px; border-radius: 14px; 
+      background: rgba(3, 6, 15, 0.96); border: 1px solid #16264f;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8); margin-bottom: 20px;
+    }
+
+    .form-lbl-wrapper {
+      display: flex; justify-content: center; align-items: center;
+      margin-bottom: 14px; font-size: 14px; font-weight: 800; color: #8ba2cf;
+    }
+    
+    /* 高精右对齐输入框包装 */
+    .phone-input-group {
+      display: flex; direction: rtl;
+      border: 2px solid #16264f; border-radius: 8px;
+      overflow: hidden; background: #010205;
+      transition: border-color 0.2s; margin-bottom: 18px;
+      width: 100%; height: 54px;
     }
     .phone-input-group:focus-within {
-      border-color: #007a3d;
+      border-color: #00baf2; box-shadow: 0 0 12px rgba(0, 186, 242, 0.4);
     }
 
     .form-input { 
-      flex: 1;
-      width: 100%;
-      padding: 15px; 
-      border: none;
-      font-size: 18px; 
-      font-weight: 700; 
-      outline: none; 
-      background: transparent;
-      text-align: right;
-      direction: ltr;
+      flex: 1; width: 100%; padding: 0 16px; border: none;
+      font-size: 19px; font-weight: 700; outline: none; 
+      background: transparent; color: #ffffff; text-align: right; direction: ltr;
     } 
 
     .phone-prefix-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f7faf8;
-      padding: 0 14px;
-      border-right: 1px solid #e1e8e4;
-      user-select: none;
-      direction: ltr;
+      display: flex; align-items: center; gap: 8px;
+      background: #070d1f; padding: 0 14px;
+      border-right: 1px solid #16264f; user-select: none; direction: ltr;
     }
 
-    /* 阿联酋高精 CSS 国旗 */
-    .uae-flag {
-      width: 24px;
-      height: 14px;
-      display: flex;
-      position: relative;
-      border: 1px solid #eaeaea;
-      box-sizing: border-box;
-    }
+    /* 🇦🇪 100% 纯 CSS 高精阿联酋国旗 */
+    .uae-flag { width: 22px; height: 12px; display: flex; position: relative; }
     .flag-red { width: 25%; height: 100%; background: #FF0000; position: absolute; left: 0; top: 0; z-index: 2; }
     .flag-stripes { width: 75%; height: 100%; position: absolute; right: 0; top: 0; display: flex; flex-direction: column; }
     .flag-green { flex: 1; background: #00732F; }
     .flag-white { flex: 1; background: #FFFFFF; }
     .flag-black { flex: 1; background: #000000; }
-
-    .prefix-text {
-      font-size: 16px;
-      font-weight: 700;
-      color: #111111;
-    }
+    .prefix-text { font-size: 16px; font-weight: 700; color: #ffffff; }
     
-    /* PIN 码框 */
+    /* 🎮 霓虹高压大按钮 */
+    .action-btn { 
+      width: 100%; background: linear-gradient(90deg, #00baf2 0%, #006fa3 100%); 
+      color: #ffffff; border: none; height: 52px;
+      font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; 
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+      box-shadow: 0 4px 18px rgba(0,186,242,0.5); transition: transform 0.1s;
+    }
+    .action-btn:active { transform: scale(0.98); }
+
+    /* PIN 码卡位模块 */
     .pin-input-group {
-      border: 2px solid #ccd5d0;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #ffffff;
-      margin-bottom: 20px;
-      width: 100%;
+      border: 2px solid #16264f; border-radius: 8px;
+      overflow: hidden; background: #010205; margin-bottom: 18px; width: 100%;
     }
     .pin-input-group input {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      outline: none;
-      font-size: 22px; 
-      font-weight: 700; 
-      text-align: center;
-      letter-spacing: 8px;
+      width: 100%; height: 54px; border: none; outline: none;
+      background: transparent; color: #ffffff; font-size: 24px; 
+      font-weight: 700; text-align: center; letter-spacing: 10px;
     }
 
-    /* 顶级触感大按钮 */
-    .action-btn { 
-      width: 100%; 
-      background: #007a3d; 
-      color: white; 
-      border: none; 
-      padding: 16px; 
-      font-size: 18px; 
-      font-weight: 700; 
-      border-radius: 12px; 
-      cursor: pointer; 
-      box-shadow: 0 4px 12px rgba(0,122,61,0.18); 
+    /* ── 阶梯式奖励心理进阶区 ── */
+    .tier-box-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-bottom: 12px;
     }
-    
-    /* ── 彻底下沉的合规条款资费区（滑动可见） ── */
+    .tier-card {
+      background: rgba(3, 6, 15, 0.9); border: 1px solid #111e3d; border-radius: 8px; padding: 12px 4px; text-align: center;
+    }
+    .tier-card.active { border-color: #ff9900; background: rgba(255,153,0,0.08); }
+    .tier-title { font-size: 10px; color: #8ba2cf; font-weight: 700; margin-bottom: 4px; }
+    .tier-icon { font-size: 22px; margin-bottom: 4px; }
+    .tier-desc { font-size: 9.5px; color: #4e628c; font-weight: bold; }
+
+    /* ── 彻底下沉的合规资费区 ── */
     .bottom-legal-zone {
-      width: 100%;
-      max-width: 440px;
-      margin: 0 auto;
-      background: #fafbfa;
-      border-top: 1px solid #ebf0ec;
-      padding: 24px 20px 35px 20px;
-      text-align: center;
+      width: 100%; max-width: 440px; margin: 0 auto; background: #010205;
+      border-top: 1px solid #0f1830; padding: 20px 16px 32px 16px; text-align: center;
     }
-    .legal-text { 
-      font-size: 11px; 
-      color: #8c9c94; 
-      line-height: 1.7;
-    }
-
-    /* ── 监控大盘 ── */
-    #dashboard-view { 
-      display: none; 
-      background: #0d1117; 
-      color: #e6edf3; 
-      font-family: monospace; 
-      font-size: 13px; 
-      position: fixed; 
-      top:0; left:0; 
-      width:100vw; height:100vh; 
-      overflow-y:auto; 
-      z-index:99999; 
-      direction: ltr; 
-    }
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: #161b22; border-bottom: 1px solid #30363d; }
-    .header-stats { display: flex; gap: 28px; }
-    .stat { text-align: center; }
-    .stat-val { font-size: 24px; font-weight: 700; }
-    .stat-lbl { font-size: 9px; color: #8b949e; margin-top: 4px; }
-    .stat:nth-child(1) .stat-val { color: #58a6ff; }
-    .stat:nth-child(2) .stat-val { color: #bc8cff; }
-    .stat:nth-child(3) .stat-val { color: #3fb950; }
-    .stat:nth-child(4) .stat-val { color: #79c0ff; }
-    .stat:nth-child(5) .stat-val { color: #3fb950; }
-    .table-wrap { padding: 20px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    thead th { padding: 10px; text-align: left; color: #8b949e; background: #161b22; border-bottom: 1px solid #30363d; }
-    tbody tr { border-bottom: 1px solid #21262d; }
-    tbody td { padding: 12px 10px; color: #e6edf3; }
+    .legal-text { font-size: 10.5px; color: #435475; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -242,11 +176,36 @@
     <main id="landing-view" class="main-hero-screen">
       <div class="hero-content-inner">
         
-        <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
-        <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأسبوعية المميزة.</p>
+        <div class="official-badge">
+          <span>✓</span> شريك مكافآت ببجي الرسمي في الإمارات <span>⚡</span>
+        </div>
+        
+        <h1 class="main-title-ar">حدث السحب الأسبوعي: احصل على هدايا ببجي موبايل الأسطورية</h1>
+        
+        <div class="reward-display-card">
+          <div class="reward-item">
+            <div class="reward-icon">👑</div>
+            <div class="reward-name">بدلة الفرعون X</div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-icon">🔫</div>
+            <div class="reward-name">M416 الثلجي</div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-icon">💎</div>
+            <div class="reward-name">8100 شدة (UC)</div>
+          </div>
+        </div>
+        
+        <div class="countdown-bar">
+          ينتهي العرض الخاص خلال: <span>03</span> أيام و <span>14</span> ساعة و <span>22</span> دقيقة
+        </div>
         
         <div class="form-card" id="step-1">
-          <label class="form-lbl" for="inp-msisdn">أدخل رقم هاتفك المتحرك:</label>
+          <div class="form-lbl-wrapper">
+            <span>أدخل رقم هاتفك المتحرك للاشتراك فورا:</span>
+          </div>
+          
           <div class="phone-input-group">
             <div class="phone-prefix-box">
               <div class="uae-flag">
@@ -261,50 +220,52 @@
             </div>
             <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
           </div>
-          <button class="action-btn">مشاركة</button>
+          
+          <button class="action-btn" id="btn-submit">
+            <span>اشترك الآن والمطالبة بالجوائز</span>
+          </button>
         </div>
 
         <div class="form-card" id="step-2" style="display: none;">
-          <label class="form-lbl" for="inp-pin">أدخل رمز PIN المكون من 4 أرقام:</label>
-          <div class="pin-input-group">
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="XXXX" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
+          <div class="form-lbl-wrapper">
+            <span>أدخل رمز التفعيل (PIN) المكون من 4 أرقام:</span>
           </div>
-          <button class="action-btn" style="background: #e3b341; box-shadow: 0 4px 12px rgba(227,179,65,0.15);">تأكيد الفوز</button>
+          <div class="pin-input-group">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="inp-pin" placeholder="••••" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
+          </div>
+          <button class="action-btn" style="background: linear-gradient(90deg, #ff9900 0%, #cc6600 100%); box-shadow: 0 4px 15px rgba(255,153,0,0.35);">
+            <span>تأكيد رمز PIN وتفعيل الهدايا</span>
+          </button>
+        </div>
+
+        <div class="tier-box-grid">
+          <div class="tier-card">
+            <div class="tier-title">المرحلة 1</div>
+            <div class="tier-icon">🥈</div>
+            <div class="tier-desc">إرسال رمز PIN</div>
+          </div>
+          <div class="tier-card active">
+            <div class="tier-title">المرحلة 2</div>
+            <div class="tier-icon">👑</div>
+            <div class="tier-desc">تأكيد الاشتراك</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-title">المرحلة 3</div>
+            <div class="tier-icon">🎁</div>
+            <div class="tier-desc">دخول السحب الكبير</div>
+          </div>
         </div>
 
       </div>
     </main>
     
     <div class="bottom-legal-zone">
-      <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت, أرسل STOP إلى 1111.</p>
+      <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111. بدعم من بوابة اتصالات الرسمية.</p>
     </div>
 
-  </div>
-
-  <div id="dashboard-view">
-    <header class="header">
-      <div style="font-size:16px; font-weight:700; color: #e6edf3;">📱 MVAS Funnel Dashboard</div>
-      <div class="header-stats">
-        <div class="stat"><div class="stat-val" id="s-pin-requests">0</div><div class="stat-lbl">PIN REQUESTS</div></div>
-        <div class="stat"><div class="stat-val" id="s-unique-msisdn">0</div><div class="stat-lbl">UNIQUE MSISDN</div></div>
-        <div class="stat"><div class="stat-val" id="s-otp-sent">0</div><div class="stat-lbl">OTP SENT</div></div>
-        <div class="stat"><div class="stat-val" id="s-pin-attempts">0</div><div class="stat-lbl">PIN ATTEMPTS</div></div>
-        <div class="stat"><div class="stat-val" id="s-pin-verified">0</div><div class="stat-lbl">PIN VERIFIED</div></div>
-      </div>
-    </header>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>DATE & TIME</th><th>OPERATOR</th><th>CLEANED MSISDN</th><th>VOLUUM CLICK_ID</th><th>TXID (CP REF)</th><th>STATUS</th><th>CP API RESPONSE</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-logs"></tbody>
-      </table>
-    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="lander.js" defer></script>
+  <script src="../lander.js" defer></script>
 </body>
 </html>
