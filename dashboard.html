@@ -67,13 +67,13 @@
         const SUPABASE_URL = "https://krcbbiitqkmlcoryedes.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyY2JiaWl0qWttbGNvcnllZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzUxMDgsImV4cCI6MjA5NTQ1MTEwOH0.il63duhVsujomyvWWcsOK_Jjbn9k5lkbBH0Ev4Dm5s4"; 
         
-        // 💥 终极修复：右侧改用大写 S 的官方标准类名，彻底解决卡死冲突！
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // 💥 黄金修复：把变量名改成纯净的 dbClient，彻底拉开冲突，右侧严格大写 S
+        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function fetchData() {
             try {
-                // 1. 从 Supabase 拉取最新 50 笔数据
-                const { data, error } = await supabase
+                // 1. 使用改名后的 dbClient 客户端稳稳向云端查表
+                const { data, error } = await dbClient
                     .from('conversions')
                     .select('*')
                     .order('created_at', { ascending: false })
@@ -81,9 +81,9 @@
 
                 if (error) throw error;
 
-                // 2. 算盘计算各项 KPI（增加了空安全保障）
+                // 2. 算盘计算各项 KPI
                 let total = data ? data.length : 0;
-                let success = data ? data.filter(r => r.status === 'verified').length : 0;
+                let success = data ? data.filter(r => r.status === 'verified' || r.status === 'success').length : 0;
                 let failed = data ? data.filter(r => r.status === 'failed').length : 0;
                 let cr = total > 0 ? ((success / total) * 100).toFixed(2) : '0.00';
 
@@ -100,12 +100,9 @@
                 if (data && total > 0) {
                     data.forEach(row => {
                         const tr = document.createElement('tr');
-                        
-                        // 格式化时间
                         const date = row.created_at ? new Date(row.created_at).toISOString().replace('T', ' ').substring(0, 19) : '未知';
-                        
-                        // 状态兼容性高亮（转大写防错）
                         const currentStatus = (row.status || 'PENDING').toLowerCase();
+                        
                         let statusClass = 'pending';
                         if (currentStatus === 'verified' || currentStatus === 'success') statusClass = 'success';
                         if (currentStatus === 'failed') statusClass = 'failed';
@@ -125,7 +122,7 @@
 
             } catch (e) {
                 console.error("加载看板失败:", e.message);
-                alert("看板数据加载失败，请检查配置！原因: " + e.message);
+                alert("看板数据加载失败，原因: " + e.message);
             }
         }
 
