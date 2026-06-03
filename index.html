@@ -2,106 +2,123 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>العرض الخاص من اتصالات</title>
   <style>
-    /* ── 基础重置 ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── 工业级重置：彻底根除手机端多余的晃动、滚动条和白边 ── */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-tap-highlight-color: transparent; /* 去除手机端点击时的丑陋蓝色高亮 */
+    }
     
     html, body {
+      width: 100%;
       height: 100%;
       background: #f4f7f5;
       color: #222;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden; /* 💥 关键死锁 1：死死卡住横向溢出，绝不允许网页左右晃动 */
+      position: relative;
     }
     
-    /* ── 💥 外层超长滚动容器（确保资费可以被刷下去） ── */
-    .scroll-container {
+    /* ── 全局外层滚动包壳（确保划下去能看全资费） ── */
+    .scroll-wrapper {
       width: 100%;
       height: 100%;
-      overflow_y: auto; /* 允许页面纵向滚动 */
-      -webkit-overflow-scrolling: touch;
-      display: block;
+      overflow-y: auto; /* 仅允许上下平滑滚动 */
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch; /* 让苹果手机滑动像丝绸般顺滑 */
     }
 
-    /* ── 💥 黄金中心包装盒（第一屏全高，将核心表单死死锁在手机屏幕正中间） ── */
+    /* ── 💥 黄金定位核心大盒子（全机型绝不跑偏） ── */
     .main-hero-screen {
       width: 100%;
-      min-height: 100vh; /* 强占满一整屏高度 */
+      min-height: 100vh; /* 确保占满整个手机屏幕 */
       max-width: 440px;
       margin: 0 auto;
       background: #ffffff;
       padding: 24px;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.05);
       
-      /* 利用标准 Table 兼容性布局实现完美的垂直居中，杜绝 Flex 产生的问题 */
-      display: table; 
+      /* 🔥 抛弃不稳定的 table 和 flex，选用海外大厂买量最推崇的经典“绝对定位死锁”机制 */
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* 垂直居中 */
+      align-items: center; /* 水平居中 */
     }
     
-    /* 模拟居中单元格 */
-    .hero-center-cell {
-      display: table-cell;
-      vertical-align: middle; /* 💥 让所有核心元素直接在屏幕正中央集合 */
-      text-align: center;
+    /* 核心表单内层包裹，增加柔性边界限制防止大屏拉伸 */
+    .hero-content-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* ── 落地页文案视觉 ── */
     .main-title-ar {
-      font-size: 26px;
+      font-size: 25px; /* 略微收紧字号，防止在小屏手机上尴尬换行导致画面跑位 */
       font-weight: 800;
       color: #007a3d;
       line-height: 1.4;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      text-align: center;
     }
     
     .sub-title-ar { 
-      font-size: 15px; 
+      font-size: 14px; 
       color: #444; 
-      margin-bottom: 30px; 
+      text-align: center;
+      margin-bottom: 28px; 
       font-weight: 600;
-      background: rgba(0, 122, 61, 0.06);
+      background: rgba(0, 122, 61, 0.05);
       padding: 6px 16px;
       border-radius: 20px;
       display: inline-block;
     }
 
     .guide-text {
-      font-size: 15px;
+      font-size: 14px;
       color: #555;
-      margin-bottom: 28px;
+      text-align: center;
+      margin-bottom: 24px;
       line-height: 1.6;
     }
     
-    /* ── 表单卡片（居中突出，更利于大拇指按到） ── */
+    /* ── 表单卡片 ── */
     .form-card { 
       width: 100%; 
-      padding: 28px 24px; 
-      border-radius: 24px; 
+      padding: 24px; 
+      border-radius: 20px; 
       background: #fcfdfe; 
       border: 1px solid #e2e9e5;
-      box-shadow: 0 8px 20px rgba(0, 122, 61, 0.03);
-      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 122, 61, 0.02);
+      margin-bottom: 15px;
     }
     
     .form-lbl { 
       display: block; 
-      font-size: 14px; 
+      font-size: 13px; 
       font-weight: 700; 
-      margin-bottom: 14px; 
+      margin-bottom: 12px; 
       color: #333;
       text-align: right;
     }
     
-    /* ── 一体化输入框（右侧国家代码） ── */
+    /* ── 完美对齐的右侧国家代码输入框 ── */
     .phone-input-group {
       display: flex;
       direction: rtl;
       border: 2px solid #ccd5d0;
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
       background: #ffffff;
       transition: border-color 0.2s;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      width: 100%;
     }
     .phone-input-group:focus-within {
       border-color: #007a3d;
@@ -109,9 +126,10 @@
 
     .form-input { 
       flex: 1;
-      padding: 16px; 
+      width: 100%;
+      padding: 15px; 
       border: none;
-      font-size: 19px; 
+      font-size: 18px; 
       font-weight: 700; 
       outline: none; 
       background: transparent;
@@ -124,13 +142,13 @@
       align-items: center;
       gap: 8px;
       background: #f7faf8;
-      padding: 0 16px;
+      padding: 0 14px;
       border-right: 1px solid #e1e8e4;
       user-select: none;
       direction: ltr;
     }
 
-    /* 阿联酋 CSS 国旗 */
+    /* 阿联酋高精 CSS 国旗 */
     .uae-flag {
       width: 24px;
       height: 14px;
@@ -151,59 +169,57 @@
       color: #111111;
     }
     
-    /* PIN 码卡位 */
+    /* PIN 码框 */
     .pin-input-group {
       border: 2px solid #ccd5d0;
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
       background: #ffffff;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      width: 100%;
     }
     .pin-input-group input {
       width: 100%;
-      padding: 16px;
+      padding: 15px;
       border: none;
       outline: none;
-      font-size: 24px; 
+      font-size: 22px; 
       font-weight: 700; 
       text-align: center;
-      letter-spacing: 10px;
+      letter-spacing: 8px;
     }
 
-    /* 大按钮（高度加大，大拇指闭眼都能点中） */
+    /* 顶级触感大按钮 */
     .action-btn { 
       width: 100%; 
       background: #007a3d; 
       color: white; 
       border: none; 
-      padding: 18px; 
-      font-size: 19px; 
+      padding: 16px; 
+      font-size: 18px; 
       font-weight: 700; 
-      border-radius: 14px; 
+      border-radius: 12px; 
       cursor: pointer; 
-      transition: background 0.2s; 
-      box-shadow: 0 5px 15px rgba(0,122,61,0.2); 
-    }
-    .action-btn:hover { 
-      background: #005c2e; 
+      box-shadow: 0 4px 12px rgba(0,122,61,0.18); 
     }
     
-    /* ── 💥 沉底合规资费区（必须划下去才能看全） ── */
+    /* ── 彻底下沉的合规条款资费区（不占第一屏位置，滑动可见） ── */
     .bottom-legal-zone {
+      width: 100%;
       max-width: 440px;
       margin: 0 auto;
       background: #fafbfa;
       border-top: 1px solid #ebf0ec;
-      padding: 30px 24px 40px 24px; /* 加大底部留白，制造明显的滑动差 */
+      padding: 24px 20px 35px 20px;
       text-align: center;
     }
     .legal-text { 
-      font-size: 12px; 
+      font-size: 11px; 
       color: #8c9c94; 
-      line-height: 1.8;
+      line-height: 1.7;
     }
 
-    /* ── 监控大盘 ── */
+    /* ── 监控大盘（独立不受影响） ── */
     #dashboard-view { 
       display: none; 
       background: #0d1117; 
@@ -236,14 +252,14 @@
 </head>
 <body>
 
-  <div class="scroll-container">
+  <div class="scroll-wrapper">
     
     <div id="landing-view" class="main-hero-screen">
-      <div class="hero-center-cell">
+      <div class="hero-content-inner">
         
         <h1 class="main-title-ar">حصرياً لمشتركي اتصالات الإمارات فقط</h1>
         <div class="sub-title-ar">خاص بمستخدمي اتصالات الإمارات فقط</div>
-        <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأكمة المميزة.</p>
+        <p class="guide-text">أدخل رقم هاتفك المتحرك الآن للانضمام إلى حملة السحب الأسبوعية المميزة.</p>
         
         <div class="form-card" id="step-1">
           <label class="form-lbl">أدخل رقم هاتفك المتحرك:</label>
